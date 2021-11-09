@@ -215,6 +215,7 @@ namespace Proyecto_final
         private void registrarItemsPedidos(MySqlConnection con, MySqlTransaction trx, int pedido)
         {
             string partialQuery = "";
+            var proveedor = CBProveedor.SelectedValue;
 
             for (int rows = 0; rows < GridPedidos.Rows.Count; rows++)
             {
@@ -222,11 +223,11 @@ namespace Proyecto_final
                 var cantidad = GridPedidos.Rows[rows].Cells[2].Value.ToString();
                 var precio = GridPedidos.Rows[rows].Cells[3].Value.ToString().Replace('$',' ');
                 var total = GridPedidos.Rows[rows].Cells[4].Value.ToString().Replace('$', ' '); ;
-                partialQuery += $"({pedido},{product_id},{cantidad},{precio},{total}),";
+                partialQuery += $"({pedido},{product_id},{proveedor},{cantidad},{precio},{total}),";
             }
 
             string query = $"insert into productos_pedidos " +
-                $"(pedido_id, producto_id, cantidad, precio, total) values{partialQuery}";
+                $"(pedido_id, producto_id, proveedor_id, cantidad, precio, total) values{partialQuery}";
 
             string finalQuery = query.Substring(0, query.Length - 1) + ";";
                    

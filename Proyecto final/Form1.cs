@@ -84,6 +84,9 @@ namespace Proyecto_final
         {
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
+                //Limpiar datagridview
+                DGVPedidos.Rows.Clear();
                 var proveedor = CBProveedor.SelectedValue;
                 connection = new Connection();
 
@@ -93,18 +96,47 @@ namespace Proyecto_final
                         $" WHERE productos_pedidos.proveedor_id = {proveedor};";
 
                     MySqlCommand cmd = new MySqlCommand(query, conn);
+                    MySqlDataReader row;
+                    row = cmd.ExecuteReader();
 
-                    //MySqlDataAdapter res = cmd.ExecuteReader();
-                    
+                    if (row.HasRows)
+                    {
+                        while (row.Read())
+                        {
+                            DGVPedidos.Rows.Add(
+                                row["nombre"].ToString(),
+                                row["talla"].ToString(),
+                                row["cantidad"].ToString(),
+                                row["precio"].ToString(),
+                                row["total"].ToString()
+                            );
+                        }
+                    } else
+                    {
+                        MessageBox.Show("No hay pedidos de este proveedor");
+                    }
 
 
                     connection.closeConnection();
+                    Cursor.Current = Cursors.Default;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            fillCBProveedor();
+            Cursor.Current = Cursors.Default;
         }
     }
 }
